@@ -28,18 +28,18 @@
  *
  * 5 (example) 			MOK
  * 						TRIGGER MODE
- * 						TRIG IN 500–550 cm
+ * 						TRIG IN 500ï¿½550 cm
  * 						ESC to EXIT
  *
  * 6 (example) 			MOK
  * 						TWO DEVICE SPEED MODE
- * 						TRIG IN 500–550 cm
+ * 						TRIG IN 500ï¿½550 cm
  * 						ESC to EXIT
  *
  * 7 (example) 			MOK
  * 						SINGLE DEVICE SPEED MODE
  * 						Approaching vehicles mode Speed window size : 100 cm
- * 						TRIG IN 2000–2500cm
+ * 						TRIG IN 2000ï¿½2500cm
  * 						ESC to EXIT
  *
  * 8 					MOK
@@ -55,7 +55,7 @@
  * 						Departing vehicles mode
  * 						Speed window size : 300 cm
  * 						Vehicle classification activated.
- * 						TRIG IN 2460–2960 cm
+ * 						TRIG IN 2460ï¿½2960 cm
  * 						ESC to EXIT
  *
  * 12 (example) 		MULTILANE SINGLE DEVICE SPEED MODE
@@ -152,8 +152,6 @@ void vFCU_LASERDIST__Process(void)
 	Luint8 u8Array[4];
 
 
-
-
 	//check for emulation
 	if(sFCU.sLaserDist.sEmu.u8EmulationEnabled == 1U)
 	{
@@ -183,6 +181,16 @@ void vFCU_LASERDIST__Process(void)
 
 			//vSIL3_FAULTTREE__Set_Flag(&sFCU.sLaserDist.sFaultFlags, 0);
 
+			//G - tell the laser to reset
+			//<ESC>, G, <CR>
+			u8Array[0] = 0x1BU;
+			u8Array[1] = 0x47U;
+			u8Array[2] = 0x0DU;
+
+			//send it.
+			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 3U);
+
+
 			//setup the lasers
 			sFCU.sLaserDist.eLaserState = LASERDIST_STATE__WAIT_LASER_RESET;
 			break;
@@ -191,12 +199,13 @@ void vFCU_LASERDIST__Process(void)
 
 			//wait here until the lasers are out of rest.
 			//5 seconds onsite hack to wait for the laser up.
-			if(sFCU.sLaserDist.u32LaserPOR_Counter > 500U)
+			if(sFCU.sLaserDist.u32LaserPOR_Counter > 50U)
 			{
 				//vSIL3_FAULTTREE__Clear_Flag(&sFCU.sLaserDist.sFaultFlags, 0);
 
 				//onsite hack
-				sFCU.sLaserDist.eLaserState = LASERDIST_STATE__CHECK_NEW_DATA; //LASERDIST_STATE__INIT_LASER_TURNON;
+				//sFCU.sLaserDist.eLaserState = LASERDIST_STATE__CHECK_NEW_DATA;
+				sFCU.sLaserDist.eLaserState = LASERDIST_STATE__INIT_LASER_TURNON;
 			}
 			else
 			{
@@ -212,20 +221,102 @@ void vFCU_LASERDIST__Process(void)
 			u8Array[1] = 0x4FU;
 			u8Array[2] = 0x31U;
 			u8Array[3] = 0x0DU;
-
 			//send it.
 			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
+
 
 #ifndef WIN32
 			vRM4_DELAYS__Delay_mS(50);
 #endif
 
+			if(0)
+			{
+			//
+			//<ESC>, V, 1, <CR>
+			u8Array[0] = 0x1BU;
+			u8Array[1] = 0x56U;
+			u8Array[2] = 0x31U;
+			u8Array[3] = 0x0DU;
+			//send it.
+			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
+
+
+			//Run self test - responds 'OK' if good, else 'ERR'
+			//<ESC>, V, 2, <CR>
+			u8Array[0] = 0x1BU;
+			u8Array[1] = 0x56U;
+			u8Array[2] = 0x32U;
+			u8Array[3] = 0x0DU;
+			//send it.
+			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
+			}
+
+//			Read permanent memory parameters
+//			<esc> ASCII code 27
+//			P Command (ASCII code 80)
+//			No. parameter #1-61 in ASCII format <cr> ASCII code 13
+
+			//want to look at:
+			//	1 operation mode
+			//	4 baud
+			// 	7 averaging (ascii)
+			// 	22 averaging (binary)
+
+			if(0)
+			{
+//			Operation mode, No. 1
+			//<ESC>, P, 1, <CR>
+			u8Array[0] = 0x1BU;
+			u8Array[1] = 0x50U;
+			u8Array[2] = 0x31U;
+			u8Array[3] = 0x0DU;
+			//send it.
+			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
+
+//			baud, No. 4
+			//<ESC>P4<CR>
+			u8Array[0] = 0x1BU;
+			u8Array[1] = 0x50U;
+			u8Array[2] = 0x34U;
+			u8Array[3] = 0x0DU;
+			//send it.
+			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
+
+//			ascii averaging, No. 7
+			//<ESC>P4<CR>
+			u8Array[0] = 0x1BU;
+			u8Array[1] = 0x50U;
+			u8Array[2] = 0x37U;
+			u8Array[3] = 0x0DU;
+			//send it.
+			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
+
+//			binary averaging, No. 22
+			//<ESC>P22<CR>
+			u8Array[0] = 0x1BU;
+			u8Array[1] = 0x50U;
+			u8Array[2] = 0x32U;
+			u8Array[3] = 0x32U;
+			u8Array[4] = 0x0DU;
+			//send it.
+			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 5U);
+			}
+
+//			Control Byte2, No. 3
+			//<ESC>P3<CR>
+			u8Array[0] = 0x1BU;
+			u8Array[1] = 0x50U;
+			u8Array[2] = 0x33U;
+			u8Array[3] = 0x0DU;
+			//send it.
+			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
+
+			//Set measurement mode to continuous ASCII
 			//<ESC>, M, 1, <CR>
 			u8Array[0] = 0x1BU;
 			u8Array[1] = 0x4DU;
 			u8Array[2] = 0x31U;
 			u8Array[3] = 0x0DU;
-
 			//send it.
 			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
 

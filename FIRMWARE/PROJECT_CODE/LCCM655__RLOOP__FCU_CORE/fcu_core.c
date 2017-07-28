@@ -99,9 +99,9 @@ void vFCU__Process(void)
 			#endif
 
 			//int the RM4's EEPROM
-			#if C_LOCALDEF__LCCM230__ENABLE_THIS_MODULE == 1U
-				vRM4_EEPROM__Init();
-			#endif
+//			#if C_LOCALDEF__LCCM230__ENABLE_THIS_MODULE == 1U
+//				vRM4_EEPROM__Init();
+//			#endif
 #endif
 
 			//init the EEPROM Params
