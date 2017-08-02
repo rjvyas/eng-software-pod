@@ -97,7 +97,7 @@ void vFCU_LASERDIST__Process_Packet(void);
  * @brief
  * Init any of the laser distance items
  * 
- * @st_funcMD5		CB16DEE2A7F5C05AABD3BA9584754C90
+ * @st_funcMD5		FCC72DBDF50BF7A9B8218E9DE78B2C2B
  * @st_funcID		LCCM655R0.FILE.033.FUNC.001
  */
 void vFCU_LASERDIST__Init(void)
@@ -140,7 +140,7 @@ void vFCU_LASERDIST__Init(void)
  * @brief
  * Process the laser distance system
  * 
- * @st_funcMD5		36297D2EDE06DBA5285970E47A1EC16B
+ * @st_funcMD5		68CEF6925DC062A13D4785E601B29F69
  * @st_funcID		LCCM655R0.FILE.033.FUNC.002
  */
 void vFCU_LASERDIST__Process(void)
@@ -450,7 +450,7 @@ void vFCU_LASERDIST__Process(void)
  * @brief
  * Return the current computed distance.
  * 
- * @st_funcMD5		130FEC5285C1E938EA3350D14F3B468C
+ * @st_funcMD5		C2FC97AEBB864B96A218E6F6264B716F
  * @st_funcID		LCCM655R0.FILE.033.FUNC.003
  */
 Lint32 s32FCU_LASERDIST__Get_Distance_mm(void)
@@ -490,7 +490,7 @@ void vFCU_LASERDIST__Process_Packet(void)
  * Take the laser packet byte array that has been captured and process it into a length
  * including fault detection
  * 
- * @st_funcMD5		50D2F735AC8706F6B0746CCB9860BD5A
+ * @st_funcMD5		84A305B5BFCD07B007D11374AA3565E8
  * @st_funcID		LCCM655R0.FILE.033.FUNC.004
  */
 void vFCU_LASERDIST__Process_Packet_ASCII(void)
@@ -559,7 +559,7 @@ void vFCU_LASERDIST__Process_Packet_ASCII(void)
  * Append a new byte from the UART into the internal array, handle any error checking
  * 
  * @param[in]		u8Value				The new byte
- * @st_funcMD5		4CFB149BFF4B44D13D8DC54626482976
+ * @st_funcMD5		708617CB2763AB7FA8B77C62A942DD43
  * @st_funcID		LCCM655R0.FILE.033.FUNC.005
  */
 void vFCU_LASERDIST__Append_Byte(Luint8 u8Value)
@@ -696,7 +696,7 @@ void vFCU_LASERDIST__Append_Byte(Luint8 u8Value)
  * @brief
  * 100ms Timer interrupt.
  * 
- * @st_funcMD5		D7AC2E42B341C67C3BC9659D2E8CEC02
+ * @st_funcMD5		229BB8530F4EBC946B1000B889B63533
  * @st_funcID		LCCM655R0.FILE.033.FUNC.006
  */
 void vFCU_LASERDIST__100MS_ISR(void)
@@ -714,7 +714,7 @@ void vFCU_LASERDIST__100MS_ISR(void)
  * On win32, set the raw value only
  * 
  * @param[in]		f32Value				Raw value in laser units
- * @st_funcMD5		7AFFF2A59E13949E9BFCA62BCED1FAA4
+ * @st_funcMD5		DA458286EBCD86D590BBDE6A5D8E372C
  * @st_funcID		LCCM655R0.FILE.033.FUNC.007
  */
 void vFCU_LASERDIST_WIN32__Set_DistanceRaw(Lint32 s32Value)
