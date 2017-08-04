@@ -181,6 +181,8 @@ void vFCU_LASERDIST__Process(void)
 
 			//vSIL3_FAULTTREE__Set_Flag(&sFCU.sLaserDist.sFaultFlags, 0);
 
+			if(0){
+			//set to 1 to run tests below
 			//G - tell the laser to reset
 			//<ESC>, G, <CR>
 			u8Array[0] = 0x1BU;
@@ -189,7 +191,7 @@ void vFCU_LASERDIST__Process(void)
 
 			//send it.
 			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 3U);
-
+			}
 
 			//setup the lasers
 			sFCU.sLaserDist.eLaserState = LASERDIST_STATE__WAIT_LASER_RESET;
@@ -204,8 +206,8 @@ void vFCU_LASERDIST__Process(void)
 				//vSIL3_FAULTTREE__Clear_Flag(&sFCU.sLaserDist.sFaultFlags, 0);
 
 				//onsite hack
-				//sFCU.sLaserDist.eLaserState = LASERDIST_STATE__CHECK_NEW_DATA;
-				sFCU.sLaserDist.eLaserState = LASERDIST_STATE__INIT_LASER_TURNON;
+				sFCU.sLaserDist.eLaserState = LASERDIST_STATE__CHECK_NEW_DATA;
+				//sFCU.sLaserDist.eLaserState = LASERDIST_STATE__INIT_LASER_TURNON;
 			}
 			else
 			{
@@ -214,7 +216,8 @@ void vFCU_LASERDIST__Process(void)
 			break;
 
 		case LASERDIST_STATE__INIT_LASER_TURNON:
-
+			if(0)
+			{
 			//tell the laser to turn on
 			//<ESC>, O, 1, <CR>
 			u8Array[0] = 0x1BU;
@@ -229,8 +232,6 @@ void vFCU_LASERDIST__Process(void)
 			vRM4_DELAYS__Delay_mS(50);
 #endif
 
-			if(0)
-			{
 			//
 			//<ESC>, V, 1, <CR>
 			u8Array[0] = 0x1BU;
@@ -249,7 +250,7 @@ void vFCU_LASERDIST__Process(void)
 			u8Array[3] = 0x0DU;
 			//send it.
 			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
-			}
+
 
 //			Read permanent memory parameters
 //			<esc> ASCII code 27
@@ -262,8 +263,7 @@ void vFCU_LASERDIST__Process(void)
 			// 	7 averaging (ascii)
 			// 	22 averaging (binary)
 
-			if(0)
-			{
+
 //			Operation mode, No. 1
 			//<ESC>, P, 1, <CR>
 			u8Array[0] = 0x1BU;
@@ -300,7 +300,7 @@ void vFCU_LASERDIST__Process(void)
 			u8Array[4] = 0x0DU;
 			//send it.
 			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 5U);
-			}
+
 
 //			Control Byte2, No. 3
 			//<ESC>P3<CR>
@@ -331,6 +331,7 @@ void vFCU_LASERDIST__Process(void)
 
 			//send it.
 			vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 3U);
+			}
 
 			sFCU.sLaserDist.eLaserState = LASERDIST_STATE__WAIT_INIT_DONE;
 			break;
