@@ -254,17 +254,16 @@ void vFCU_LASERDIST__Process(void)
 					vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 4U);
 				}
 
+				//Read permanent memory parameters
+				//<esc> ASCII code 27
+				//P Command (ASCII code 80)
+				//No. parameter #1-61 in ASCII format <cr> ASCII code 13
 
-		//			Read permanent memory parameters
-		//			<esc> ASCII code 27
-		//			P Command (ASCII code 80)
-		//			No. parameter #1-61 in ASCII format <cr> ASCII code 13
-
-					//want to look at:
-					//	1 operation mode
-					//	4 baud
-					// 	7 averaging (ascii)
-					// 	22 averaging (binary)
+				//want to look at:
+				//	1 operation mode
+				//	4 baud
+				// 	7 averaging (ascii)
+				// 	22 averaging (binary)
 
 				if(0){
 					//Operation mode, No. 1
