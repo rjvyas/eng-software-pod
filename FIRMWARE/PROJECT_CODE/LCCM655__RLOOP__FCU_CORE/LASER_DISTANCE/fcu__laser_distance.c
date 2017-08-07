@@ -206,8 +206,8 @@ void vFCU_LASERDIST__Process(void)
 				//vSIL3_FAULTTREE__Clear_Flag(&sFCU.sLaserDist.sFaultFlags, 0);
 
 				//onsite hack
-				sFCU.sLaserDist.eLaserState = LASERDIST_STATE__CHECK_NEW_DATA;
-				//sFCU.sLaserDist.eLaserState = LASERDIST_STATE__INIT_LASER_TURNON;
+//				sFCU.sLaserDist.eLaserState = LASERDIST_STATE__CHECK_NEW_DATA;
+				sFCU.sLaserDist.eLaserState = LASERDIST_STATE__INIT_LASER_TURNON;
 			}
 			else
 			{
@@ -338,6 +338,16 @@ void vFCU_LASERDIST__Process(void)
 					u8Array[1] = 0x63U;
 					u8Array[2] = 0x0DU;
 
+					//send it.
+					vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 3U);
+				}
+
+				if(0){
+					//Check all current params
+					//<ESC>, L <CR>
+					u8Array[0] = 0x1BU;
+					u8Array[1] = 0x4CU;
+					u8Array[2] = 0x0DU;
 					//send it.
 					vSIL3_SC16__Tx_ByteArray(C_FCU__SC16_FWD_LASER_INDEX, (Luint8*)&u8Array[0], 3U);
 				}
@@ -631,19 +641,23 @@ void vFCU_LASERDIST__Append_Byte(Luint8 u8Value)
 			break;
 
 		case LASERDIST_RX__BYTE_0:
-
+			if((u8Value & 0x80U) != 0x80U)
+			{
 			//distance mid
 			// = "E" if there is an error
 			sFCU.sLaserDist.sBinary.unRx.u8[1] = u8Value;
 			sFCU.sLaserDist.u8NewByteArray[0] = u8Value;
+			}
+
 			sFCU.sLaserDist.eRxState = LASERDIST_RX__BYTE_1;
 			break;
 
 		case LASERDIST_RX__BYTE_1:
-
+			if((u8Value & 0x80U) != 0x80U)
+			{
 			sFCU.sLaserDist.sBinary.unRx.u8[0] = u8Value;
 			sFCU.sLaserDist.u8NewByteArray[1] = u8Value;
-
+			}
 			//millimeter binary mode hack
 			sFCU.sLaserDist.u8NewPacket = 1U;
 
